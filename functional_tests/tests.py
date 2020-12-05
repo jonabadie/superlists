@@ -1,12 +1,23 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import WebDriverException
 import time
+
+from .waiter import JoWaiter
 
 
 class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
+        self.waiter = JoWaiter(
+            self.browser,
+            timeout=3,
+            ignored_exceptions=[
+                AssertionError,
+                WebDriverException
+            ]
+        )
 
     def tearDown(self):
         self.browser.quit()
@@ -15,7 +26,6 @@ class NewVisitorTest(LiveServerTestCase):
         input_box = self.browser.find_element_by_id('id_new_item')
         input_box.send_keys(text)
         input_box.send_keys(Keys.ENTER)
-        time.sleep(1)
 
     def input_box_placeholder_present(self):
         input_box = self.browser.find_element_by_id('id_new_item')
@@ -30,6 +40,7 @@ class NewVisitorTest(LiveServerTestCase):
         rows_text = [row.text for row in rows]
         for text in texts:
             self.assertIn(text, rows_text)
+        return True
 
     def test_can_start_list_and_retrieve_later(self):
         # User go on the website
@@ -48,7 +59,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.typing_in_list_input('Buy a new laptop')
 
         # And now the page lists "1: Buy a new laptop" as an item in a to-do list
-        self.check_for_row_in_list_table(["1: Buy a new laptop"])
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
+        # self.check_for_row_in_list_table(["1: Buy a new laptop"])
 
         # There is still a text box inviting him to add another item
         self.input_box_placeholder_present()
@@ -57,7 +69,10 @@ class NewVisitorTest(LiveServerTestCase):
         self.typing_in_list_input('Configure the new laptop')
 
         # Page update again and shows both item in the list
-        self.check_for_row_in_list_table(["1: Buy a new laptop", "2: Configure the new laptop"])
+        self.waiter.until(
+            lambda b:
+            self.check_for_row_in_list_table(["1: Buy a new laptop", "2: Configure the new laptop"])
+        )
 
         self.fail('FINISH TEST')
         # User wonder if the website will remember the list
