@@ -42,7 +42,7 @@ class NewVisitorTest(LiveServerTestCase):
             self.assertIn(text, rows_text)
         return True
 
-    def test_can_start_list_and_retrieve_later(self):
+    def test_can_start_list_for_one_user(self):
         # User go on the website
         self.browser.get(self.live_server_url)
 
@@ -74,9 +74,38 @@ class NewVisitorTest(LiveServerTestCase):
             self.check_for_row_in_list_table(["1: Buy a new laptop", "2: Configure the new laptop"])
         )
 
-        self.fail('FINISH TEST')
-        # User wonder if the website will remember the list
-        # User sees that the site has generated a unique URL for her
-        # There is some explanatory text to that effect
+        # User satisfied
 
-        # User visits that URL, his to-do list is still there
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # User start a new list
+        self.browser.get(self.live_server_url)
+        self.typing_in_list_input('Buy a new laptop')
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
+
+        # User notices that his list has a unique URL
+        user_list_url = self.browser.current_url
+        self.assertRegex(user_list_url, '/lists/.+')
+
+        # Now a new user, Jacob, comes along to the site
+
+        # We use a new browser session to make sure that no information
+        # of Edith's is coming through from cookies etc...
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Jacob visits the home page. There is no sign of first user's list
+        self.browser.get(self.live_server_url)
+        page = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn("1: Buy a new laptop", page)
+        self.assertNotIn("2: Configure the new laptop", page)
+
+        # Jacob starts his own list
+        self.typing_in_list_input('Rearrange living room')
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Rearrange living room"]))
+
+        # Jacob has his own list url
+        jacob_list_url = self.browser.current_url
+        self.assertRegex(jacob_list_url, '/lists/.+')
+        self.assertNotEqual(user_list_url, jacob_list_url)
+
+        # Satisfied
