@@ -58,9 +58,9 @@ class NewVisitorTest(LiveServerTestCase):
         # When he hits enter, the page updates
         self.typing_in_list_input('Buy a new laptop')
 
+        time.sleep(1)
         # And now the page lists "1: Buy a new laptop" as an item in a to-do list
         self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
-        # self.check_for_row_in_list_table(["1: Buy a new laptop"])
 
         # There is still a text box inviting him to add another item
         self.input_box_placeholder_present()
