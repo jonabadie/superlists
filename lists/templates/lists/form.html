@@ -1,0 +1,6 @@
+<form method="POST" action="{{ action }}">
+    {% csrf_token %}
+
+    <label for="id_new_item"></label>
+    <input name="item_text" id="id_new_item" placeholder="Enter a to-do item"/>
+</form>

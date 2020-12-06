@@ -1,14 +1,7 @@
-<html>
-    <head>
-        <title>To-Do lists</title>
-    </head>
-    <body>
-        <h1>Your To-Do list</h1>
-        <form method="POST" action="{% url 'new-list' %}">
-            {% csrf_token %}
+{% extends 'lists/base.html' %}
 
-            <label for="id_new_item"></label>
-            <input name="item_text" id="id_new_item" placeholder="Enter a to-do item"/>
-        </form>
-    </body>
-</html>
+{% block content %}
+<h1>Your To-Do list</h1>
+{% url 'new-list' as form_action%}
+{% include 'lists/form.html' with action=form_action %}
+{% endblock %}
