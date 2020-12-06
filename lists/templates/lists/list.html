@@ -1,12 +1,17 @@
 {% extends 'lists/base.html' %}
 
 {% block content %}
+
 <h1>Start a new To-Do list</h1>
+
+
 {% url 'add-item' list.id as form_action%}
 {% include 'lists/form.html' with action=form_action %}
-<table id="id_list_table">
+
+<table class="table table-striped" id="id_list_table">
     {% for item in list.item_set.all %}
         <tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
     {% endfor %}
 </table>
+
 {% endblock %}
