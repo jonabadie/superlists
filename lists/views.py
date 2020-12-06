@@ -17,7 +17,7 @@ def new_list(request):
     if text:
         list_ = List.objects.create()
         Item.objects.create(text=text, list=list_)
-        return redirect(f'/lists/{list_.id}/')
+        return redirect('view-list', list_id=list_.id)
 
 
 def new_item(request, list_id):
@@ -25,4 +25,4 @@ def new_item(request, list_id):
     list_ = get_object_or_404(List, pk=list_id)
     if text:
         Item.objects.create(text=text, list=list_)
-        return redirect(f'/lists/{list_.id}/')
+        return redirect('view-list', list_id=list_.id)
