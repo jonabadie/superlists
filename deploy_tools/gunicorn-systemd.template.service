@@ -3,11 +3,11 @@ Description=Gunicorn server for DOMAIN
 
 [Service]
 Restart=on-failure
-User=jabadie
-WorkingDirectory=/home/jabadie/sites/DOMAIN
-EnvironmentFile=/home/jabadie/sites/DOMAIN/.env
+User=deploy
+WorkingDirectory=/home/deploy/sites/DOMAIN
+EnvironmentFile=/home/deploy/sites/DOMAIN/.env
 
-ExecStart=/home/jabadie/sites/DOMAIN/venv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket superlists.wsgi:application
+ExecStart=/home/deplot/sites/DOMAIN/venv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket superlists.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
