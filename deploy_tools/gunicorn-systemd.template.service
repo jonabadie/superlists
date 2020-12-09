@@ -7,7 +7,7 @@ User=deploy
 WorkingDirectory=/home/deploy/sites/DOMAIN
 EnvironmentFile=/home/deploy/sites/DOMAIN/.env
 
-ExecStart=/home/deplot/sites/DOMAIN/venv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket superlists.wsgi:application
+ExecStart=/home/deploy/sites/DOMAIN/venv/bin/gunicorn --bind unix:/tmp/DOMAIN.socket superlists.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
