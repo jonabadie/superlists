@@ -1,51 +1,8 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import WebDriverException
-import time
-import os
-
-from .waiter import JoWaiter
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        staging_server = os.environ.get('STAGING_SERVER')
-        if staging_server:
-            self.live_server_url = "http://" + staging_server
-        self.waiter = JoWaiter(
-            self.browser,
-            timeout=3,
-            ignored_exceptions=[
-                AssertionError,
-                WebDriverException
-            ]
-        )
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def typing_in_list_input(self, text):
-        input_box = self.browser.find_element_by_id('id_new_item')
-        input_box.send_keys(text)
-        input_box.send_keys(Keys.ENTER)
-
-    def input_box_placeholder_present(self):
-        input_box = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(
-            input_box.get_attribute('placeholder'),
-            'Enter a to-do item'
-        )
-
-    def check_for_row_in_list_table(self, texts):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        rows_text = [row.text for row in rows]
-        for text in texts:
-            self.assertIn(text, rows_text)
-        return True
-
+class NewVisitorTest(FunctionalTest):
     def test_can_start_list_for_one_user(self):
         # User go on the website
         self.browser.get(self.live_server_url)
@@ -112,26 +69,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotEqual(user_list_url, jacob_list_url)
 
         # Satisfied
-
-    def test_layout_and_styling(self):
-        # Jacob goes on the website on a small computer screen
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # Jacob notice that the input box is nicely centered
-        input_box = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            input_box.location['x'] + input_box.size['width'] / 2,
-            512,
-            delta=10
-        )
-
-        # He types a new list and sees the input is nicely centered there too
-        self.typing_in_list_input('Buy a new laptop')
-        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
-        input_box = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            input_box.location['x'] + input_box.size['width'] / 2,
-            512,
-            delta=10
-        )
