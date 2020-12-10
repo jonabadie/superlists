@@ -22,5 +22,5 @@ class JoWaiter(WebDriverWait):
             if time.time() > end_time:
                 break
         if exception:  # Diff with super
-            raise exception
+            raise exception  # Diff with super
         raise TimeoutException(message)
