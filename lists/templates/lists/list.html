@@ -5,7 +5,7 @@
 <h1>Start a new To-Do list</h1>
 
 
-{% url 'add-item' list.id as form_action%}
+{% url 'view-list' list.id as form_action%}
 {% include 'lists/form.html' with action=form_action %}
 
 <table class="table table-striped" id="id_list_table">

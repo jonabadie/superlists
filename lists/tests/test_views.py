@@ -37,30 +37,6 @@ class NewListTest(TestCase):
         self.assertEqual(List.objects.count(), 0)
 
 
-class NewItemTest(TestCase):
-    def test_can_save_POST_request(self):
-        List.objects.create()
-        list2 = List.objects.create()
-
-        self.client.post(
-            reverse('add-item', args=[list2.id]),
-            data={'item_text': "A new list item"})
-
-        self.assertEqual(Item.objects.count(), 1)
-        self.assertEqual(Item.objects.first().text, "A new list item")
-        self.assertEqual(Item.objects.first().list, list2)
-
-    def test_redirects_after_POST(self):
-        List.objects.create()
-        list_ = List.objects.create()
-
-        response = self.client.post(
-            reverse('add-item', args=[list_.id]),
-            data={'item_text': "A new list item"})
-
-        self.assertRedirects(response, reverse('view-list', args=[list_.id]))
-
-
 class ListViewTest(TestCase):
     def test_use_list_temple(self):
         list_ = List.objects.create()
@@ -88,3 +64,26 @@ class ListViewTest(TestCase):
         self.assertContains(response, texts[1])
         self.assertNotContains(response, texts[2])
         self.assertNotContains(response, texts[3])
+
+    def test_can_save_POST_request(self):
+        List.objects.create()
+        list2 = List.objects.create()
+
+        self.client.post(
+            reverse('view-list', args=[list2.id]),
+            data={'item_text': "A new list item"})
+
+        self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(Item.objects.first().text, "A new list item")
+        self.assertEqual(Item.objects.first().list, list2)
+
+    def test_redirects_after_POST(self):
+        List.objects.create()
+        list_ = List.objects.create()
+
+        response = self.client.post(
+            reverse('view-list', args=[list_.id]),
+            data={'item_text': "A new list item"})
+
+        self.assertRedirects(response, reverse('view-list', args=[list_.id]))
+

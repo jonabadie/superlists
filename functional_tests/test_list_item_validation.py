@@ -1,4 +1,5 @@
 from .base import FunctionalTest
+import time
 
 
 class ItemValidationTest(FunctionalTest):
@@ -9,18 +10,18 @@ class ItemValidationTest(FunctionalTest):
         self.typing_in_list_input('')
 
         # The page refresh and he receives an error message
-        error_message = self.waiter.until(lambda d: d.find_element_by_css_selector('.has_error'))
-        self.assertIn("empty item", error_message.text)
+        error_message = self.waiter.until(lambda d: self.browser.find_element_by_css_selector('.has-error'))
+        self.assertIn("empty list item", error_message.text)
 
         # He tries again with something
         self.typing_in_list_input('Go take the kids at school')
-        self.check_for_row_in_list_table(['1: Go take the kids at school'])
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(['1: Go take the kids at school']))
 
         # Then try again to add an empty item on the list page
         # And receive the same error as on the home page
         self.typing_in_list_input('')
-        error_message = self.waiter.until(lambda d: d.find_element_by_css_selector('.has_error'))
-        self.assertIn("empty item", error_message.text)
+        error_message = self.waiter.until(lambda d: d.find_element_by_css_selector('.has-error'))
+        self.assertIn("empty list item", error_message.text)
 
         # He corrects it again and enter something in the input box
         self.typing_in_list_input('Make them eat dinner')
