@@ -14,7 +14,7 @@ def view_list(request, list_id):
         text = request.POST.get('item_text')
         if text:
             Item.objects.create(text=text, list=list_)
-            return redirect('view-list', list_id=list_.id)
+            return redirect(list_)
         error = "You can't add an empty list item"
     return render(request, 'lists/list.html', {'list': list_, 'error': error})
 
@@ -26,4 +26,4 @@ def new_list(request):
         return render(request, 'lists/home.html', {'error': error})
     list_ = List.objects.create()
     Item.objects.create(text=text, list=list_)
-    return redirect('view-list', list_id=list_.id)
+    return redirect(list_)
