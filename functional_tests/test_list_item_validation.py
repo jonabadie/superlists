@@ -25,4 +25,6 @@ class ItemValidationTest(FunctionalTest):
 
         # He corrects it again and enter something in the input box
         self.typing_in_list_input('Make them eat dinner')
-        self.check_for_row_in_list_table(['1: Go take the kids at school', '2: Make them eat dinner'])
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(
+            ['1: Go take the kids at school', '2: Make them eat dinner']
+        ))

@@ -9,12 +9,14 @@ def home_page(request):
 
 def view_list(request, list_id):
     list_ = get_object_or_404(List, pk=list_id)
+    error = None
     if request.method == 'POST':
         text = request.POST.get('item_text')
         if text:
             Item.objects.create(text=text, list=list_)
             return redirect('view-list', list_id=list_.id)
-    return render(request, 'lists/list.html', {'list': list_})
+        error = "You can't add an empty list item"
+    return render(request, 'lists/list.html', {'list': list_, 'error': error})
 
 
 def new_list(request):

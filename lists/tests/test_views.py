@@ -87,3 +87,15 @@ class ListViewTest(TestCase):
 
         self.assertRedirects(response, reverse('view-list', args=[list_.id]))
 
+    def test_validation_errors_are_sent_to_list_page_template(self):
+        list_ = List.objects.create()
+        response = self.client.post(reverse('view-list', args=[list_.id]), data={'item_text': ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'lists/list.html')
+        self.assertContains(response, "empty list item")
+
+    def test_invalid_list_item_arent_saved(self):
+        list_ = List.objects.create()
+        self.client.post(reverse('view-list', args=[list_.id]), data={'item_text': ""})
+        self.assertEqual(Item.objects.count(), 0)
+
