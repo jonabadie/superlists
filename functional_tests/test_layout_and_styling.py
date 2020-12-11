@@ -8,7 +8,7 @@ class LayoutAndStylingTest(FunctionalTest):
         self.browser.set_window_size(1024, 768)
 
         # Jacob notice that the input box is nicely centered
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_input_box()
         self.assertAlmostEqual(
             input_box.location['x'] + input_box.size['width'] / 2,
             512,
@@ -18,7 +18,7 @@ class LayoutAndStylingTest(FunctionalTest):
         # He types a new list and sees the input is nicely centered there too
         self.typing_in_list_input('Buy a new laptop')
         self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
-        input_box = self.browser.find_element_by_id('id_new_item')
+        input_box = self.get_input_box()
         self.assertAlmostEqual(
             input_box.location['x'] + input_box.size['width'] / 2,
             512,

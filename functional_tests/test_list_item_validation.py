@@ -9,9 +9,8 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.live_server_url)
         self.typing_in_list_input('')
 
-        # The page refresh and he receives an error message
-        error_message = self.waiter.until(lambda d: self.browser.find_element_by_css_selector('.has-error'))
-        self.assertIn("empty list item", error_message.text)
+        # The page does not refresh and identify the entry as invalid
+        self.waiter.until(lambda d: self.browser.find_element_by_css_selector('#id_text:invalid'))
 
         # He tries again with something
         self.typing_in_list_input('Go take the kids at school')
@@ -20,8 +19,7 @@ class ItemValidationTest(FunctionalTest):
         # Then try again to add an empty item on the list page
         # And receive the same error as on the home page
         self.typing_in_list_input('')
-        error_message = self.waiter.until(lambda d: d.find_element_by_css_selector('.has-error'))
-        self.assertIn("empty list item", error_message.text)
+        self.waiter.until(lambda d: self.browser.find_element_by_css_selector('#id_text:invalid'))
 
         # He corrects it again and enter something in the input box
         self.typing_in_list_input('Make them eat dinner')
