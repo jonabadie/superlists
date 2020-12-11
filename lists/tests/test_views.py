@@ -25,6 +25,17 @@ class NewListTest(TestCase):
         list_ = List.objects.first()
         self.assertRedirects(response, reverse('view-list', args=[list_.id]))
 
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        response = self.client.post(reverse('new-list'), data={'item_text': ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'lists/home.html')
+        self.assertContains(response, "empty list item")
+
+    def test_invalid_list_item_arent_saved(self):
+        self.client.post(reverse('new-list'), data={'item_text': ""})
+        self.assertEqual(Item.objects.count(), 0)
+        self.assertEqual(List.objects.count(), 0)
+
 
 class NewItemTest(TestCase):
     def test_can_save_POST_request(self):

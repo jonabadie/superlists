@@ -3,6 +3,11 @@
 
     <label for="id_new_item"></label>
     <input class="form-control form-control-lg" name="item_text" id="id_new_item" placeholder="Enter a to-do item"/>
+    {% if error %}
+        <div class="form-group has-error">
+            <span class="helpp-block">{{ error }}</span>
+        </div>
+    {% endif %}
 </form>
 
 
