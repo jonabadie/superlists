@@ -8,6 +8,7 @@ from .waiter import JoWaiter
 
 
 class FunctionalTest(StaticLiveServerTestCase):
+
     def setUp(self):
         self.browser = webdriver.Firefox()
         staging_server = os.environ.get('STAGING_SERVER')

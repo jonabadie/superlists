@@ -26,3 +26,29 @@ class ItemValidationTest(FunctionalTest):
         self.waiter.until(lambda b: self.check_for_row_in_list_table(
             ['1: Go take the kids at school', '2: Make them eat dinner']
         ))
+
+        # Satisfied
+
+    def test_cant_add_duplicate_item(self):
+        # Jacob goes on the website
+        self.browser.get(self.live_server_url)
+
+        # Jacob start a new list
+        # It goes on the list page
+        # He can see his item on the page
+        self.typing_in_list_input('Clean my room')
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(['1: Clean my room']))
+
+        # Jacob enter the exact same item
+        self.typing_in_list_input('Clean my room')
+
+        # Invalid because it already exist
+        self.waiter.until(lambda d: self.browser.find_element_by_css_selector('#id_text:invalid'))
+
+        # Jacob enter a different item and everything is fine
+        self.typing_in_list_input('Clean my other room')
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(
+            ['1: Clean my room', '2: Clean my other room']
+        ))
+
+        # Satisfied
