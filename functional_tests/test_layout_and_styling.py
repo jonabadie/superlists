@@ -17,7 +17,7 @@ class LayoutAndStylingTest(FunctionalTest):
 
         # He types a new list and sees the input is nicely centered there too
         self.typing_in_list_input('Buy a new laptop')
-        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
+        self.wait_for_check_for_row(["1: Buy a new laptop"])
         input_box = self.get_input_box()
         self.assertAlmostEqual(
             input_box.location['x'] + input_box.size['width'] / 2,

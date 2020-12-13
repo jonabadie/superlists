@@ -8,7 +8,6 @@ from .waiter import JoWaiter
 
 
 class FunctionalTest(StaticLiveServerTestCase):
-
     def setUp(self):
         self.browser = webdriver.Firefox()
         staging_server = os.environ.get('STAGING_SERVER')
@@ -48,3 +47,6 @@ class FunctionalTest(StaticLiveServerTestCase):
         for text in texts:
             self.assertIn(text, rows_text)
         return True
+
+    def wait_for_check_for_row(self, texts):
+        self.waiter.until(lambda b: self.check_for_row_in_list_table(texts))

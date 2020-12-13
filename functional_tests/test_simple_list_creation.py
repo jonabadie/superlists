@@ -20,7 +20,7 @@ class NewVisitorTest(FunctionalTest):
         self.typing_in_list_input('Buy a new laptop')
 
         # And now the page lists "1: Buy a new laptop" as an item in a to-do list
-        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
+        self.wait_for_check_for_row(["1: Buy a new laptop"])
 
         # There is still a text box inviting him to add another item
         self.input_box_placeholder_present()
@@ -29,10 +29,7 @@ class NewVisitorTest(FunctionalTest):
         self.typing_in_list_input('Configure the new laptop')
 
         # Page update again and shows both item in the list
-        self.waiter.until(
-            lambda b:
-            self.check_for_row_in_list_table(["1: Buy a new laptop", "2: Configure the new laptop"])
-        )
+        self.wait_for_check_for_row(["1: Buy a new laptop", "2: Configure the new laptop"])
 
         # User satisfied
 
@@ -40,7 +37,7 @@ class NewVisitorTest(FunctionalTest):
         # User start a new list
         self.browser.get(self.live_server_url)
         self.typing_in_list_input('Buy a new laptop')
-        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Buy a new laptop"]))
+        self.wait_for_check_for_row(["1: Buy a new laptop"])
 
         # User notices that his list has a unique URL
         user_list_url = self.browser.current_url
@@ -61,7 +58,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Jacob starts his own list
         self.typing_in_list_input('Rearrange living room')
-        self.waiter.until(lambda b: self.check_for_row_in_list_table(["1: Rearrange living room"]))
+        self.wait_for_check_for_row(["1: Rearrange living room"])
 
         # Jacob has his own list url
         jacob_list_url = self.browser.current_url
